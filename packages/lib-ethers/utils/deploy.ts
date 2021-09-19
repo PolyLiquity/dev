@@ -112,7 +112,7 @@ const deployContracts = async (
       lusdToken: await deployContract(
         deployer,
         getContractFactory,
-        "LUSDToken",
+        "PLUSDToken",
         addresses.troveManager,
         addresses.stabilityPool,
         addresses.borrowerOperations,
@@ -122,7 +122,7 @@ const deployContracts = async (
       lqtyToken: await deployContract(
         deployer,
         getContractFactory,
-        "LQTYToken",
+        "PLQTYToken",
         addresses.communityIssuance,
         addresses.lqtyStaking,
         addresses.lockupContractFactory,

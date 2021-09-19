@@ -2,7 +2,7 @@
 
 pragma solidity 0.6.11;
 
-import "../Interfaces/ILQTYToken.sol";
+import "../Interfaces/IPLQTYToken.sol";
 import "../Interfaces/ICommunityIssuance.sol";
 import "../Dependencies/BaseMath.sol";
 import "../Dependencies/LiquityMath.sol";
@@ -44,7 +44,7 @@ contract CommunityIssuance is ICommunityIssuance, Ownable, CheckContract, BaseMa
     */
     uint constant public LQTYSupplyCap = 32e24; // 32 million
 
-    ILQTYToken public lqtyToken;
+    IPLQTYToken public lqtyToken;
 
     address public stabilityPoolAddress;
 
@@ -75,7 +75,7 @@ contract CommunityIssuance is ICommunityIssuance, Ownable, CheckContract, BaseMa
         checkContract(_lqtyTokenAddress);
         checkContract(_stabilityPoolAddress);
 
-        lqtyToken = ILQTYToken(_lqtyTokenAddress);
+        lqtyToken = IPLQTYToken(_lqtyTokenAddress);
         stabilityPoolAddress = _stabilityPoolAddress;
 
         // When LQTYToken deployed, it should have transferred CommunityIssuance's LQTY entitlement

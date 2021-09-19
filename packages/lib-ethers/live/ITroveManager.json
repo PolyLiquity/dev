@@ -985,7 +985,7 @@
       "name": "lqtyToken",
       "outputs": [
         {
-          "internalType": "contract ILQTYToken",
+          "internalType": "contract IPLQTYToken",
           "name": "",
           "type": "address"
         }
@@ -998,7 +998,7 @@
       "name": "lusdToken",
       "outputs": [
         {
-          "internalType": "contract ILUSDToken",
+          "internalType": "contract IPLUSDToken",
           "name": "",
           "type": "address"
         }

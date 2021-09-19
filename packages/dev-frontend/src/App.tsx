@@ -29,8 +29,8 @@ if (process.env.REACT_APP_DEMO_MODE === "true") {
 
 // Start pre-fetching the config
 getConfig().then(config => {
-  // console.log("Frontend config:");
-  // console.log(config);
+   console.log("Frontend config:");
+   console.log(config);
   Object.assign(window, { config });
 });
 

@@ -122,12 +122,12 @@ contract('LUSDToken', async accounts => {
 
     it("name(): returns the token's name", async () => {
       const name = await lusdTokenTester.name()
-      assert.equal(name, "LUSD Stablecoin")
+      assert.equal(name, "PLUSD Stablecoin")
     })
 
     it("symbol(): returns the token's symbol", async () => {
       const symbol = await lusdTokenTester.symbol()
-      assert.equal(symbol, "LUSD")
+      assert.equal(symbol, "PLUSD")
     })
 
     it("decimal(): returns the number of decimal digits used", async () => {

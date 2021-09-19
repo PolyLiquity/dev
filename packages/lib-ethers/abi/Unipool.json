@@ -229,7 +229,7 @@
     "name": "lqtyToken",
     "outputs": [
       {
-        "internalType": "contract ILQTYToken",
+        "internalType": "contract IPLQTYToken",
         "name": "",
         "type": "address"
       }

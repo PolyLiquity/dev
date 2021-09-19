@@ -53,11 +53,11 @@ const generateRandomAccounts = (numberOfAccounts: number) => {
 const deployerAccount = process.env.DEPLOYER_PRIVATE_KEY || Wallet.createRandom().privateKey;
 const devChainRichAccount = "0x4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204c81682cb7";
 
-const infuraApiKey = "ad9cef41c9c844a7b54d10be24d416e5";
+const infuraApiKey = process.env.INFURA_API_KEY;
 
-const infuraNetwork = (name: string): { [name: string]: NetworkUserConfig } => ({
+const infuraNetwork = (name: string,prefix:string=""): { [name: string]: NetworkUserConfig } => ({
   [name]: {
-    url: `https://${name}.infura.io/v3/${infuraApiKey}`,
+    url: `https://${prefix}${name}.infura.io/v3/${infuraApiKey}`,
     accounts: [deployerAccount]
   }
 });
@@ -77,6 +77,10 @@ const oracleAddresses = {
   kovan: {
     chainlink: "0x9326BFA02ADD2366b30bacB125260Af641031331",
     tellor: "0x20374E579832859f180536A69093A126Db1c8aE9" // Playground
+  },
+  mumbai: {
+    chainlink: "0xF9680D99D6C9589e2a93a78A04A279e509205945",
+    tellor: "0xbc2f9E092ac5CED686440E5062D11D6543202B24" 
   }
 };
 
@@ -88,7 +92,8 @@ const wethAddresses = {
   ropsten: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
   rinkeby: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
   goerli: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
-  kovan: "0xd0A1E359811322d97991E03f863a0C30C2cF029C"
+  kovan: "0xd0A1E359811322d97991E03f863a0C30C2cF029C",
+  mumbai: "0xf738b83Fa52A7Ab570918Afe61b78b8E2DC6F4EF"
 };
 
 const hasWETH = (network: string): network is keyof typeof wethAddresses => network in wethAddresses;
@@ -116,7 +121,8 @@ const config: HardhatUserConfig = {
     ...infuraNetwork("rinkeby"),
     ...infuraNetwork("goerli"),
     ...infuraNetwork("kovan"),
-    ...infuraNetwork("mainnet")
+    ...infuraNetwork("mainnet"),
+    ...infuraNetwork("mumbai","polygon-")
   },
 
   paths: {

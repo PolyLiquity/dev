@@ -10,6 +10,7 @@ import kovan from "../deployments/kovan.json";
 import rinkeby from "../deployments/rinkeby.json";
 import ropsten from "../deployments/ropsten.json";
 import mainnet from "../deployments/mainnet.json";
+import mumbai from "../deployments/mumbai.json"
 
 import { EthersProvider, EthersSigner } from "./types";
 
@@ -32,6 +33,7 @@ const deployments: {
   [rinkeby.chainId]: rinkeby,
   [goerli.chainId]: goerli,
   [kovan.chainId]: kovan,
+  [mumbai.chainId]: mumbai,
 
   ...(dev !== null ? { [dev.chainId]: dev } : {})
 };
@@ -312,6 +314,7 @@ export function _connectByChainId(
   chainId: number,
   optionalParams?: EthersLiquityConnectionOptionalParams
 ): EthersLiquityConnection {
+  console.warn("in connect by chain ");
   const deployment: _LiquityDeploymentJSON =
     deployments[chainId] ?? panic(new UnsupportedNetworkError(chainId));
 

@@ -7,10 +7,10 @@ import "../Dependencies/SafeMath.sol";
 import "../Dependencies/Ownable.sol";
 import "../Dependencies/CheckContract.sol";
 import "../Dependencies/console.sol";
-import "../Interfaces/ILQTYToken.sol";
+import "../Interfaces/IPLQTYToken.sol";
 import "../Interfaces/ILQTYStaking.sol";
 import "../Dependencies/LiquityMath.sol";
-import "../Interfaces/ILUSDToken.sol";
+import "../Interfaces/IPLUSDToken.sol";
 
 contract LQTYStaking is ILQTYStaking, Ownable, CheckContract, BaseMath {
     using SafeMath for uint;
@@ -32,8 +32,8 @@ contract LQTYStaking is ILQTYStaking, Ownable, CheckContract, BaseMath {
         uint F_LUSD_Snapshot;
     }
     
-    ILQTYToken public lqtyToken;
-    ILUSDToken public lusdToken;
+    IPLQTYToken public lqtyToken;
+    IPLUSDToken public lusdToken;
 
     address public troveManagerAddress;
     address public borrowerOperationsAddress;
@@ -75,8 +75,8 @@ contract LQTYStaking is ILQTYStaking, Ownable, CheckContract, BaseMath {
         checkContract(_borrowerOperationsAddress);
         checkContract(_activePoolAddress);
 
-        lqtyToken = ILQTYToken(_lqtyTokenAddress);
-        lusdToken = ILUSDToken(_lusdTokenAddress);
+        lqtyToken = IPLQTYToken(_lqtyTokenAddress);
+        lusdToken = IPLUSDToken(_lusdTokenAddress);
         troveManagerAddress = _troveManagerAddress;
         borrowerOperationsAddress = _borrowerOperationsAddress;
         activePoolAddress = _activePoolAddress;

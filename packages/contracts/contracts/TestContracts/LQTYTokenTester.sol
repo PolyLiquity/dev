@@ -2,9 +2,9 @@
 
 pragma solidity 0.6.11;
 
-import "../LQTY/LQTYToken.sol";
+import "../LQTY/PLQTYToken.sol";
 
-contract LQTYTokenTester is LQTYToken {
+contract LQTYTokenTester is PLQTYToken {
     constructor
     (
         address _communityIssuanceAddress, 
@@ -15,7 +15,7 @@ contract LQTYTokenTester is LQTYToken {
         address _multisigAddress
     ) 
         public 
-        LQTYToken 
+        PLQTYToken 
     (
         _communityIssuanceAddress,
         _lqtyStakingAddress,

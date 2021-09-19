@@ -3,7 +3,7 @@
 pragma solidity 0.6.11;
 
 import "../Dependencies/SafeMath.sol";
-import "../Interfaces/ILQTYToken.sol";
+import "../Interfaces/IPLQTYToken.sol";
 
 /*
 * The lockup contract architecture utilizes a single LockupContract, with an unlockTime. The unlockTime is passed as an argument 
@@ -26,7 +26,7 @@ contract LockupContract {
 
     address public immutable beneficiary;
 
-    ILQTYToken public lqtyToken;
+    IPLQTYToken public lqtyToken;
 
     // Unlock time is the Unix point in time at which the beneficiary can withdraw.
     uint public unlockTime;
@@ -46,7 +46,7 @@ contract LockupContract {
     )
         public 
     {
-        lqtyToken = ILQTYToken(_lqtyTokenAddress);
+        lqtyToken = IPLQTYToken(_lqtyTokenAddress);
 
         /*
         * Set the unlock time to a chosen instant in the future, as long as it is at least 1 year after
@@ -63,7 +63,7 @@ contract LockupContract {
         _requireCallerIsBeneficiary();
         _requireLockupDurationHasPassed();
 
-        ILQTYToken lqtyTokenCached = lqtyToken;
+        IPLQTYToken lqtyTokenCached = lqtyToken;
         uint LQTYBalance = lqtyTokenCached.balanceOf(address(this));
         lqtyTokenCached.transfer(beneficiary, LQTYBalance);
         emit LockupContractEmptied(LQTYBalance);

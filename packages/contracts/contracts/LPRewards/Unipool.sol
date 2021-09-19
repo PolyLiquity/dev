@@ -6,7 +6,7 @@ import "../Dependencies/LiquityMath.sol";
 import "../Dependencies/SafeMath.sol";
 import "../Dependencies/Ownable.sol";
 import "../Dependencies/CheckContract.sol";
-import "../Interfaces/ILQTYToken.sol";
+import "../Interfaces/IPLQTYToken.sol";
 import "./Dependencies/SafeERC20.sol";
 import "./Interfaces/ILPTokenWrapper.sol";
 import "./Interfaces/IUnipool.sol";
@@ -75,7 +75,7 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
     string constant public NAME = "Unipool";
 
     uint256 public duration;
-    ILQTYToken public lqtyToken;
+    IPLQTYToken public lqtyToken;
 
     uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
@@ -105,7 +105,7 @@ contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {
         checkContract(_uniTokenAddress);
 
         uniToken = IERC20(_uniTokenAddress);
-        lqtyToken = ILQTYToken(_lqtyTokenAddress);
+        lqtyToken = IPLQTYToken(_lqtyTokenAddress);
         duration = _duration;
 
         _notifyRewardAmount(lqtyToken.getLpRewardsEntitlement(), _duration);
