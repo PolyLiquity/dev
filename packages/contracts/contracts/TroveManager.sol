@@ -476,14 +476,14 @@ contract TroveManager is LiquityBase, Ownable, CheckContract, ITroveManager {
     {
         singleLiquidation.entireTroveDebt = _entireTroveDebt;
         singleLiquidation.entireTroveColl = _entireTroveColl;
-        uint collToOffset = _entireTroveDebt.mul(MCR).div(_price);
+        uint cappedCollPortion = _entireTroveDebt.mul(MCR).div(_price);
 
-        singleLiquidation.collGasCompensation = _getCollGasCompensation(collToOffset);
+        singleLiquidation.collGasCompensation = _getCollGasCompensation(cappedCollPortion);
         singleLiquidation.LUSDGasCompensation = LUSD_GAS_COMPENSATION;
 
         singleLiquidation.debtToOffset = _entireTroveDebt;
-        singleLiquidation.collToSendToSP = collToOffset.sub(singleLiquidation.collGasCompensation);
-        singleLiquidation.collSurplus = _entireTroveColl.sub(collToOffset);
+        singleLiquidation.collToSendToSP = cappedCollPortion.sub(singleLiquidation.collGasCompensation);
+        singleLiquidation.collSurplus = _entireTroveColl.sub(cappedCollPortion);
         singleLiquidation.debtToRedistribute = 0;
         singleLiquidation.collToRedistribute = 0;
     }
@@ -580,7 +580,10 @@ contract TroveManager is LiquityBase, Ownable, CheckContract, ITroveManager {
                 // Update aggregate trackers
                 vars.remainingLUSDInStabPool = vars.remainingLUSDInStabPool.sub(singleLiquidation.debtToOffset);
                 vars.entireSystemDebt = vars.entireSystemDebt.sub(singleLiquidation.debtToOffset);
-                vars.entireSystemColl = vars.entireSystemColl.sub(singleLiquidation.collToSendToSP).sub(singleLiquidation.collSurplus);
+                vars.entireSystemColl = vars.entireSystemColl.
+                    sub(singleLiquidation.collToSendToSP).
+                    sub(singleLiquidation.collGasCompensation).
+                    sub(singleLiquidation.collSurplus);
 
                 // Add liquidation values to their respective running totals
                 totals = _addLiquidationValuesToTotals(totals, singleLiquidation);
@@ -719,7 +722,10 @@ contract TroveManager is LiquityBase, Ownable, CheckContract, ITroveManager {
                 // Update aggregate trackers
                 vars.remainingLUSDInStabPool = vars.remainingLUSDInStabPool.sub(singleLiquidation.debtToOffset);
                 vars.entireSystemDebt = vars.entireSystemDebt.sub(singleLiquidation.debtToOffset);
-                vars.entireSystemColl = vars.entireSystemColl.sub(singleLiquidation.collToSendToSP);
+                vars.entireSystemColl = vars.entireSystemColl.
+                    sub(singleLiquidation.collToSendToSP).
+                    sub(singleLiquidation.collGasCompensation).
+                    sub(singleLiquidation.collSurplus);
 
                 // Add liquidation values to their respective running totals
                 totals = _addLiquidationValuesToTotals(totals, singleLiquidation);

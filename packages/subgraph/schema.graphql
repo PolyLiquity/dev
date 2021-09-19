@@ -2,8 +2,6 @@ type Global @entity {
   "There should be only one System entity with an ID of 'only'"
   id: ID!
 
-  priceFeedAddress: Bytes
-
   systemStateCount: Int!
   transactionCount: Int!
   changeCount: Int!
@@ -18,7 +16,6 @@ type Global @entity {
 
   totalNumberOfLQTYStakes: Int!
   numberOfActiveLQTYStakes: Int!
-  totalLQTYTokensStaked: BigDecimal!
 
   "Total amount of LUSD paid as borrowing fees"
   totalBorrowingFeesPaid: BigDecimal!
@@ -50,7 +47,7 @@ type SystemState @entity {
   "Can be used to chronologically sort SystemStates"
   sequenceNumber: Int!
 
-  price: BigDecimal!
+  price: BigDecimal
 
   totalCollateral: BigDecimal!
   totalDebt: BigDecimal!
@@ -58,6 +55,7 @@ type SystemState @entity {
 
   tokensInStabilityPool: BigDecimal!
   collSurplusPoolBalance: BigDecimal!
+  totalLQTYTokensStaked: BigDecimal!
 
   cause: Change @derivedFrom(field: "systemStateAfter")
 }
@@ -295,9 +293,9 @@ type LqtyStakeChange implements Change @entity {
   stake: LqtyStake!
   stakeOperation: LQTYStakeOperation!
 
-  amountBefore: BigDecimal!
-  amountChange: BigDecimal!
-  amountAfter: BigDecimal!
+  stakedAmountBefore: BigDecimal!
+  stakedAmountChange: BigDecimal!
+  stakedAmountAfter: BigDecimal!
 
   issuanceGain: BigDecimal!
   redemptionGain: BigDecimal!
