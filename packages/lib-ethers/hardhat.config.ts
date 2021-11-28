@@ -93,7 +93,8 @@ const wethAddresses = {
   rinkeby: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
   goerli: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
   kovan: "0xd0A1E359811322d97991E03f863a0C30C2cF029C",
-  mumbai: "0xf738b83Fa52A7Ab570918Afe61b78b8E2DC6F4EF"
+  mumbai: "0xf738b83Fa52A7Ab570918Afe61b78b8E2DC6F4EF",
+  dev:"0x4Fc93687084A160e84cEa77f31fC21c0f741Fd70"
 };
 
 const hasWETH = (network: string): network is keyof typeof wethAddresses => network in wethAddresses;
@@ -114,7 +115,7 @@ const config: HardhatUserConfig = {
 
     dev: {
       url: "http://localhost:8545",
-      accounts: [deployerAccount, devChainRichAccount, ...generateRandomAccounts(numAccounts - 2)]
+      accounts: [deployerAccount, deployerAccount, ...generateRandomAccounts(numAccounts - 2)]
     },
 
     ...infuraNetwork("ropsten"),
@@ -124,7 +125,9 @@ const config: HardhatUserConfig = {
     ...infuraNetwork("mainnet"),
     ...infuraNetwork("mumbai","polygon-")
   },
-
+  mocha: {
+    timeout: 50000000,
+  },
   paths: {
     artifacts,
     cache
@@ -135,8 +138,8 @@ declare module "hardhat/types/runtime" {
   interface HardhatRuntimeEnvironment {
     deployLiquity: (
       deployer: Signer,
+      wethAddress: string,
       useRealPriceFeed?: boolean,
-      wethAddress?: string,
       overrides?: Overrides
     ) => Promise<_LiquityDeploymentJSON>;
   }
@@ -157,15 +160,15 @@ const getContractFactory: (
 extendEnvironment(env => {
   env.deployLiquity = async (
     deployer,
+    wethAddress ,
     useRealPriceFeed = false,
-    wethAddress = undefined,
     overrides?: Overrides
   ) => {
     const deployment = await deployAndSetupContracts(
       deployer,
       getContractFactory(env),
       !useRealPriceFeed,
-      env.network.name === "dev",
+      env.network.name === "dev" || env.network.name === "hardhat"  ,
       wethAddress,
       overrides
     );
@@ -209,17 +212,17 @@ task("deploy", "Deploys the contracts to the network")
         throw new Error(`PriceFeed not supported on ${env.network.name}`);
       }
 
-      let wethAddress: string | undefined = undefined;
-      if (createUniswapPair) {
+      //let wethAddress: string | undefined = undefined;
+      //if (createUniswapPair) {
         if (!hasWETH(env.network.name)) {
           throw new Error(`WETH not deployed on ${env.network.name}`);
         }
-        wethAddress = wethAddresses[env.network.name];
-      }
-
+        let wethAddress = wethAddresses[env.network.name];
+     // }
+      //wethAddress = wethAddresses[env.network.name];
       setSilent(false);
 
-      const deployment = await env.deployLiquity(deployer, useRealPriceFeed, wethAddress, overrides);
+      const deployment = await env.deployLiquity(deployer, wethAddress,useRealPriceFeed, overrides);
 
       if (useRealPriceFeed) {
         const contracts = _connectToContracts(deployer, deployment);
@@ -256,6 +259,7 @@ task("deploy", "Deploys the contracts to the network")
       console.log();
       console.log(deployment);
       console.log();
+      
     }
   );
 

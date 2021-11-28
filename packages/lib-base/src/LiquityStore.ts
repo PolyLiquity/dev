@@ -25,6 +25,12 @@ export interface LiquityStoreBaseState {
   /** User's native currency balance (e.g. Ether). */
   accountBalance: Decimal;
 
+  /** User's weth balance (e.g. Ether). */
+  wethBalance: Decimal;
+
+  /** The liquidity mining contract's allowance of user's WETH tokens. */
+  wethTokenAllowance: Decimal;
+
   /** User's LUSD token balance. */
   lusdBalance: Decimal;
 
@@ -350,6 +356,19 @@ export abstract class LiquityStore<T = unknown> {
         "accountBalance",
         baseState.accountBalance,
         baseStateUpdate.accountBalance
+      ),
+      
+      wethBalance: this._updateIfChanged(
+        eq,
+        "wethBalance",
+        baseState.wethBalance,
+        baseStateUpdate.wethBalance
+      ),
+      wethTokenAllowance: this._updateIfChanged(
+        eq,
+        "uniTokenAllowance",
+        baseState.uniTokenAllowance,
+        baseStateUpdate.uniTokenAllowance
       ),
 
       lusdBalance: this._updateIfChanged(

@@ -5,6 +5,7 @@ import { StabilityDeposit } from "./StabilityDeposit";
 import { Trove, TroveWithPendingRedistribution, UserTrove } from "./Trove";
 import { FrontendStatus, ReadableLiquity, TroveListingParams } from "./ReadableLiquity";
 
+
 /** @internal */
 export type _ReadableLiquityWithExtraParamsBase<T extends unknown[]> = {
   [P in keyof ReadableLiquity]: ReadableLiquity[P] extends (...params: infer A) => infer R
@@ -51,6 +52,12 @@ export class _CachedReadableLiquity<T extends unknown[]>
   constructor(readable: _ReadableLiquityWithExtraParams<T>, cache: _LiquityReadCache<T>) {
     this._readable = readable;
     this._cache = cache;
+  }
+  async getWethTokenAllowance(address?: string, ...extraParams: T): Promise<Decimal> {
+    return (
+      this._cache.getWethTokenAllowance(address, ...extraParams) ??
+      this._readable.getWethTokenAllowance(address, ...extraParams)
+    );
   }
 
   async getTotalRedistributed(...extraParams: T): Promise<Trove> {
@@ -119,6 +126,13 @@ export class _CachedReadableLiquity<T extends unknown[]>
     return (
       this._cache.getLUSDBalance(address, ...extraParams) ??
       this._readable.getLUSDBalance(address, ...extraParams)
+    );
+  }
+
+  async getWETHBalance(address?: string, ...extraParams: T): Promise<Decimal> {
+    return (
+      this._cache.getWETHBalance(address, ...extraParams) ??
+      this._readable.getWETHBalance(address, ...extraParams)
     );
   }
 

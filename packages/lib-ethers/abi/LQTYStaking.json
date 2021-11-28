@@ -211,6 +211,19 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_wethTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "WethTokenAddressSet",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "DECIMAL_PRECISION",
     "outputs": [
@@ -430,6 +443,11 @@
         "internalType": "address",
         "name": "_activePoolAddress",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wethTokenAddress",
+        "type": "address"
       }
     ],
     "name": "setAddresses",
@@ -530,6 +548,19 @@
     "name": "unstake",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "wethToken",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

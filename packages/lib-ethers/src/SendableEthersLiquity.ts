@@ -244,6 +244,14 @@ export class SendableEthersLiquity
     return this._populate.approveUniTokens(allowance, overrides).then(sendTransaction);
   }
 
+   /** {@inheritDoc @liquity/lib-base#SendableLiquity.approveWethTokens} */
+   approveWethTokens(
+    allowance?: Decimalish,
+    overrides?: EthersTransactionOverrides
+  ): Promise<SentEthersLiquityTransaction<void>> {
+    return this._populate.approveWethTokens(allowance, overrides).then(sendTransaction);
+  }
+
   /** {@inheritDoc @liquity/lib-base#SendableLiquity.stakeUniTokens} */
   stakeUniTokens(
     amount: Decimalish,

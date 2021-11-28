@@ -3,7 +3,6 @@ import { Trove, TroveWithPendingRedistribution, UserTrove } from "./Trove";
 import { StabilityDeposit } from "./StabilityDeposit";
 import { Fees } from "./Fees";
 import { LQTYStake } from "./LQTYStake";
-
 /**
  * Represents whether an address has been registered as a Liquity frontend.
  *
@@ -119,6 +118,15 @@ export interface ReadableLiquity {
   getLUSDBalance(address?: string): Promise<Decimal>;
 
   /**
+   * Get the amount of WETH held by an address.
+   *
+   * @param address - Address whose balance should be retrieved.
+   */
+   getWETHBalance(address?: string): Promise<Decimal>;
+
+
+
+   /**
    * Get the amount of LQTY held by an address.
    *
    * @param address - Address whose balance should be retrieved.
@@ -138,6 +146,13 @@ export interface ReadableLiquity {
    * @param address - Address holding the Uniswap ETH/LUSD LP tokens.
    */
   getUniTokenAllowance(address?: string): Promise<Decimal>;
+
+    /**
+   * Get the liquidity WETH allowance.
+   *
+   * @param address - Address holding WETH
+   */
+  getWethTokenAllowance(address?: string): Promise<Decimal>;
 
   /**
    * Get the remaining LQTY that will be collectively rewarded to liquidity miners.

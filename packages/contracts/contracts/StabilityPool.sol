@@ -156,6 +156,8 @@ contract StabilityPool is LiquityBase, Ownable, CheckContract, IStabilityPool {
 
     IPLUSDToken public lusdToken;
 
+    IERC20 public wethToken;
+
     // Needed to check if there are pending liquidations
     ISortedTroves public sortedTroves;
 
@@ -244,6 +246,7 @@ contract StabilityPool is LiquityBase, Ownable, CheckContract, IStabilityPool {
     event ActivePoolAddressChanged(address _newActivePoolAddress);
     event DefaultPoolAddressChanged(address _newDefaultPoolAddress);
     event LUSDTokenAddressChanged(address _newLUSDTokenAddress);
+    event WethTokenAddressSet(address _wethTokenAddress);
     event SortedTrovesAddressChanged(address _newSortedTrovesAddress);
     event PriceFeedAddressChanged(address _newPriceFeedAddress);
     event CommunityIssuanceAddressChanged(address _newCommunityIssuanceAddress);
@@ -276,7 +279,8 @@ contract StabilityPool is LiquityBase, Ownable, CheckContract, IStabilityPool {
         address _lusdTokenAddress,
         address _sortedTrovesAddress,
         address _priceFeedAddress,
-        address _communityIssuanceAddress
+        address _communityIssuanceAddress,
+        address _wethTokenAddress
     )
         external
         override
@@ -289,6 +293,7 @@ contract StabilityPool is LiquityBase, Ownable, CheckContract, IStabilityPool {
         checkContract(_sortedTrovesAddress);
         checkContract(_priceFeedAddress);
         checkContract(_communityIssuanceAddress);
+        checkContract(_wethTokenAddress);
 
         borrowerOperations = IBorrowerOperations(_borrowerOperationsAddress);
         troveManager = ITroveManager(_troveManagerAddress);
@@ -297,6 +302,9 @@ contract StabilityPool is LiquityBase, Ownable, CheckContract, IStabilityPool {
         sortedTroves = ISortedTroves(_sortedTrovesAddress);
         priceFeed = IPriceFeed(_priceFeedAddress);
         communityIssuance = ICommunityIssuance(_communityIssuanceAddress);
+        wethToken = IERC20(_wethTokenAddress);
+
+        wethToken.approve( _borrowerOperationsAddress,0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff);
 
         emit BorrowerOperationsAddressChanged(_borrowerOperationsAddress);
         emit TroveManagerAddressChanged(_troveManagerAddress);
@@ -305,6 +313,7 @@ contract StabilityPool is LiquityBase, Ownable, CheckContract, IStabilityPool {
         emit SortedTrovesAddressChanged(_sortedTrovesAddress);
         emit PriceFeedAddressChanged(_priceFeedAddress);
         emit CommunityIssuanceAddressChanged(_communityIssuanceAddress);
+        emit WethTokenAddressSet(_wethTokenAddress);
 
         _renounceOwnership();
     }
@@ -452,12 +461,12 @@ contract StabilityPool is LiquityBase, Ownable, CheckContract, IStabilityPool {
         and then it is deposited into the Trove, not the other way around). */
         emit ETHGainWithdrawn(msg.sender, depositorETHGain, LUSDLoss);
         emit UserDepositChanged(msg.sender, compoundedLUSDDeposit);
-
+        console.log("Depositor Gain is %s All ETH is ", depositorETHGain, ETH);
         ETH = ETH.sub(depositorETHGain);
         emit StabilityPoolETHBalanceUpdated(ETH);
         emit EtherSent(msg.sender, depositorETHGain);
 
-        borrowerOperations.moveETHGainToTrove{ value: depositorETHGain }(msg.sender, _upperHint, _lowerHint);
+        borrowerOperations.moveETHGainToTrove(msg.sender, _upperHint, _lowerHint,depositorETHGain);
     }
 
     // --- LQTY issuance functions ---
@@ -835,9 +844,9 @@ contract StabilityPool is LiquityBase, Ownable, CheckContract, IStabilityPool {
         ETH = newETH;
         emit StabilityPoolETHBalanceUpdated(newETH);
         emit EtherSent(msg.sender, _amount);
-
-        (bool success, ) = msg.sender.call{ value: _amount }("");
-        require(success, "StabilityPool: sending ETH failed");
+        wethToken.transfer(msg.sender, _amount);
+       // (bool success, ) = msg.sender.call{ value: _amount }("");
+        //require(success, "StabilityPool: sending ETH failed");
     }
 
     // Send LUSD to user and decrease LUSD in Pool
@@ -992,7 +1001,13 @@ contract StabilityPool is LiquityBase, Ownable, CheckContract, IStabilityPool {
 
     receive() external payable {
         _requireCallerIsActivePool();
-        ETH = ETH.add(msg.value);
+        //ETH = ETH.add(msg.value);
+        StabilityPoolETHBalanceUpdated(ETH);
+    }
+
+    function addWeth(uint _amount) external override{
+        _requireCallerIsActivePool();
+        ETH = ETH.add(_amount);
         StabilityPoolETHBalanceUpdated(ETH);
     }
 }

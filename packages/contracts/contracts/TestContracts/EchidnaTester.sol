@@ -27,6 +27,7 @@ contract EchidnaTester {
     uint private MCR;
     uint private CCR;
     uint private LUSD_GAS_COMPENSATION;
+    address private wethTokenAddress = 0x4Fc93687084A160e84cEa77f31fC21c0f741Fd70;
 
     TroveManager public troveManager;
     BorrowerOperations public borrowerOperations;
@@ -38,12 +39,15 @@ contract EchidnaTester {
     PLUSDToken public lusdToken;
     PriceFeedTestnet priceFeedTestnet;
     SortedTroves sortedTroves;
+    IERC20 public wethToken;
+
 
     EchidnaProxy[NUMBER_OF_ACTORS] public echidnaProxies;
 
     uint private numberOfTroves;
 
     constructor() public payable {
+
         troveManager = new TroveManager();
         borrowerOperations = new BorrowerOperations();
         activePool = new ActivePool();
@@ -55,7 +59,7 @@ contract EchidnaTester {
             address(stabilityPool),
             address(borrowerOperations)
         );
-
+        wethToken = IERC20(wethTokenAddress);
         collSurplusPool = new CollSurplusPool();
         priceFeedTestnet = new PriceFeedTestnet();
 
@@ -65,25 +69,25 @@ contract EchidnaTester {
             address(activePool), address(defaultPool), 
             address(stabilityPool), address(gasPool), address(collSurplusPool),
             address(priceFeedTestnet), address(lusdToken), 
-            address(sortedTroves), address(0), address(0));
+            address(sortedTroves), address(0), wethTokenAddress);
        
         borrowerOperations.setAddresses(address(troveManager), 
             address(activePool), address(defaultPool), 
             address(stabilityPool), address(gasPool), address(collSurplusPool),
             address(priceFeedTestnet), address(sortedTroves), 
-            address(lusdToken), address(0));
+            address(lusdToken), address(0),wethTokenAddress);
 
         activePool.setAddresses(address(borrowerOperations), 
-            address(troveManager), address(stabilityPool), address(defaultPool));
+            address(troveManager), address(stabilityPool), address(defaultPool),wethTokenAddress, address(collSurplusPool));
 
-        defaultPool.setAddresses(address(troveManager), address(activePool));
+        defaultPool.setAddresses(address(troveManager), address(activePool),wethTokenAddress);
         
         stabilityPool.setAddresses(address(borrowerOperations), 
             address(troveManager), address(activePool), address(lusdToken), 
-            address(sortedTroves), address(priceFeedTestnet), address(0));
+            address(sortedTroves), address(priceFeedTestnet), address(0),address(0));
 
         collSurplusPool.setAddresses(address(borrowerOperations), 
-             address(troveManager), address(activePool));
+             address(troveManager), address(activePool),wethTokenAddress);
     
         sortedTroves.setParams(1e18, address(troveManager), address(borrowerOperations));
 

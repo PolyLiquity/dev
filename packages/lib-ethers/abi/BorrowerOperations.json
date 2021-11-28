@@ -224,6 +224,19 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_wethTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "WethTokenAddressSet",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "BORROWING_FEE_FLOOR",
     "outputs": [
@@ -364,6 +377,11 @@
         "internalType": "address",
         "name": "_lowerHint",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_WETHAmount",
+        "type": "uint256"
       }
     ],
     "name": "addColl",
@@ -402,6 +420,11 @@
         "internalType": "address",
         "name": "_lowerHint",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_WETHAmount",
+        "type": "uint256"
       }
     ],
     "name": "adjustTrove",
@@ -549,6 +572,11 @@
         "internalType": "address",
         "name": "_lowerHint",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_WETHAmount",
+        "type": "uint256"
       }
     ],
     "name": "moveETHGainToTrove",
@@ -577,6 +605,11 @@
         "internalType": "address",
         "name": "_lowerHint",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_WETHAmount",
+        "type": "uint256"
       }
     ],
     "name": "openTrove",
@@ -684,6 +717,11 @@
         "internalType": "address",
         "name": "_lqtyStakingAddress",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wethTokenAddress",
+        "type": "address"
       }
     ],
     "name": "setAddresses",
@@ -710,6 +748,19 @@
     "outputs": [
       {
         "internalType": "contract ITroveManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "wethToken",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
         "name": "",
         "type": "address"
       }

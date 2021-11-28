@@ -27,6 +27,7 @@
     "lusdToken": "0xb57D00E7b7632C773592909ebCcFBD39a8818Fa6",
     "lqtyToken": "0x30D0C2E4b8c2241F35b3355753b982d720FD320d",
     "multiTroveGetter": "0x83793708Cd5d0d9dedDb9a846ed2b17D76331503",
-    "uniToken": "0x82a06F3988f7A8f71ae47Cf59c05Ba24E7b7c29f"
+    "uniToken": "0x82a06F3988f7A8f71ae47Cf59c05Ba24E7b7c29f",
+    "wethToken": "0x81f16bc4bba710232fa70626b92b9da167316c50"
   }
 }

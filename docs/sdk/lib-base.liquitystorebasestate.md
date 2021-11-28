@@ -38,4 +38,6 @@ export interface LiquityStoreBaseState
 |  [troveBeforeRedistribution](./lib-base.liquitystorebasestate.trovebeforeredistribution.md) | [TroveWithPendingRedistribution](./lib-base.trovewithpendingredistribution.md) | User's Trove in its state after the last direct modification. |
 |  [uniTokenAllowance](./lib-base.liquitystorebasestate.unitokenallowance.md) | [Decimal](./lib-base.decimal.md) | The liquidity mining contract's allowance of user's Uniswap ETH/LUSD LP tokens. |
 |  [uniTokenBalance](./lib-base.liquitystorebasestate.unitokenbalance.md) | [Decimal](./lib-base.decimal.md) | User's Uniswap ETH/LUSD LP token balance. |
+|  [wethBalance](./lib-base.liquitystorebasestate.wethbalance.md) | [Decimal](./lib-base.decimal.md) | User's weth balance (e.g. Ether). |
+|  [wethTokenAllowance](./lib-base.liquitystorebasestate.wethtokenallowance.md) | [Decimal](./lib-base.decimal.md) | The liquidity mining contract's allowance of user's WETH tokens. |
 

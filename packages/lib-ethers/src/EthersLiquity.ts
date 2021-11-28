@@ -225,6 +225,16 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     return this._readable.getLQTYBalance(address, overrides);
   }
 
+  /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getWETHBalance} */
+  getWETHBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
+    return this._readable.getWETHBalance(address, overrides);
+  }
+  
+    /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getWethTokenAllowance} */
+    getWethTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
+      return this._readable.getWethTokenAllowance(address, overrides);
+    }
+
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getUniTokenBalance} */
   getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
     return this._readable.getUniTokenBalance(address, overrides);
@@ -622,6 +632,17 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     return this.send.approveUniTokens(allowance, overrides).then(waitForSuccess);
   }
 
+    /**
+   * {@inheritDoc @liquity/lib-base#TransactableLiquity.approveWethTokens}
+   *
+   * @throws
+   * Throws {@link EthersTransactionFailedError} in case of transaction failure.
+   * Throws {@link EthersTransactionCancelledError} if the transaction is cancelled or replaced.
+   */
+     approveWethTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<void> {
+      return this.send.approveWethTokens(allowance, overrides).then(waitForSuccess);
+    }
+  
   /**
    * {@inheritDoc @liquity/lib-base#TransactableLiquity.stakeUniTokens}
    *

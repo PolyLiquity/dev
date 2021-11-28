@@ -8,19 +8,21 @@ import { useLiquity } from "../hooks/LiquityContext";
 import { COIN, GT } from "../strings";
 import { Statistic } from "./Statistic";
 
-const selectBalances = ({ accountBalance, lusdBalance, lqtyBalance }: LiquityStoreState) => ({
+const selectBalances = ({ accountBalance,wethBalance, lusdBalance, lqtyBalance }: LiquityStoreState) => ({
   accountBalance,
+  wethBalance,
   lusdBalance,
   lqtyBalance
 });
 
 const Balances: React.FC = () => {
-  const { accountBalance, lusdBalance, lqtyBalance } = useLiquitySelector(selectBalances);
+  const { accountBalance, wethBalance,lusdBalance, lqtyBalance } = useLiquitySelector(selectBalances);
 
   return (
     <Box sx={{ mb: 3 }}>
       <Heading>My Account Balances</Heading>
-      <Statistic name="ETH"> {accountBalance.prettify(4)}</Statistic>
+      <Statistic name="MATIC"> {accountBalance.prettify(4)}</Statistic>
+      <Statistic name="WETH"> {wethBalance.prettify(4)}</Statistic>
       <Statistic name={COIN}> {lusdBalance.prettify()}</Statistic>
       <Statistic name={GT}>{lqtyBalance.prettify()}</Statistic>
     </Box>

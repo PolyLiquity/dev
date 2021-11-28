@@ -34,6 +34,7 @@ contract LQTYStaking is ILQTYStaking, Ownable, CheckContract, BaseMath {
     
     IPLQTYToken public lqtyToken;
     IPLUSDToken public lusdToken;
+    IERC20 public wethToken;
 
     address public troveManagerAddress;
     address public borrowerOperationsAddress;
@@ -46,6 +47,7 @@ contract LQTYStaking is ILQTYStaking, Ownable, CheckContract, BaseMath {
     event TroveManagerAddressSet(address _troveManager);
     event BorrowerOperationsAddressSet(address _borrowerOperationsAddress);
     event ActivePoolAddressSet(address _activePoolAddress);
+    event WethTokenAddressSet(address _wethTokenAddress);
 
     event StakeChanged(address indexed staker, uint newStake);
     event StakingGainsWithdrawn(address indexed staker, uint LUSDGain, uint ETHGain);
@@ -63,7 +65,8 @@ contract LQTYStaking is ILQTYStaking, Ownable, CheckContract, BaseMath {
         address _lusdTokenAddress,
         address _troveManagerAddress, 
         address _borrowerOperationsAddress,
-        address _activePoolAddress
+        address _activePoolAddress,
+        address _wethTokenAddress
     ) 
         external 
         onlyOwner 
@@ -74,9 +77,11 @@ contract LQTYStaking is ILQTYStaking, Ownable, CheckContract, BaseMath {
         checkContract(_troveManagerAddress);
         checkContract(_borrowerOperationsAddress);
         checkContract(_activePoolAddress);
+        checkContract(_wethTokenAddress);
 
         lqtyToken = IPLQTYToken(_lqtyTokenAddress);
         lusdToken = IPLUSDToken(_lusdTokenAddress);
+        wethToken = IERC20(_wethTokenAddress);
         troveManagerAddress = _troveManagerAddress;
         borrowerOperationsAddress = _borrowerOperationsAddress;
         activePoolAddress = _activePoolAddress;
@@ -86,6 +91,8 @@ contract LQTYStaking is ILQTYStaking, Ownable, CheckContract, BaseMath {
         emit TroveManagerAddressSet(_troveManagerAddress);
         emit BorrowerOperationsAddressSet(_borrowerOperationsAddress);
         emit ActivePoolAddressSet(_activePoolAddress);
+        emit LQTYTokenAddressSet(_lusdTokenAddress);
+        emit WethTokenAddressSet(_wethTokenAddress);
 
         _renounceOwnership();
     }
@@ -215,7 +222,8 @@ contract LQTYStaking is ILQTYStaking, Ownable, CheckContract, BaseMath {
 
     function _sendETHGainToUser(uint ETHGain) internal {
         emit EtherSent(msg.sender, ETHGain);
-        (bool success, ) = msg.sender.call{value: ETHGain}("");
+       // (bool success, ) = msg.sender.call{value: ETHGain}("");
+       bool success = wethToken.transfer(msg.sender, ETHGain);
         require(success, "LQTYStaking: Failed to send accumulated ETHGain");
     }
 

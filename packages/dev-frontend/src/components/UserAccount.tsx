@@ -10,15 +10,16 @@ import { shortenAddress } from "../utils/shortenAddress";
 
 import { Icon } from "./Icon";
 
-const select = ({ accountBalance, lusdBalance, lqtyBalance }: LiquityStoreState) => ({
+const select = ({ accountBalance, wethBalance,lusdBalance, lqtyBalance }: LiquityStoreState) => ({
   accountBalance,
+  wethBalance,
   lusdBalance,
   lqtyBalance
 });
 
 export const UserAccount: React.FC = () => {
   const { account } = useLiquity();
-  const { accountBalance, lusdBalance, lqtyBalance } = useLiquitySelector(select);
+  const { accountBalance, wethBalance,lusdBalance, lqtyBalance } = useLiquitySelector(select);
 
   return (
     <Box sx={{ display: ["none", "flex"] }}>
@@ -36,7 +37,8 @@ export const UserAccount: React.FC = () => {
         <Icon name="wallet" size="lg" />
 
         {([
-          ["ETH", accountBalance],
+          ["MATIC", accountBalance],
+          ["WETH",wethBalance],
           [COIN, lusdBalance],
           [GT, lqtyBalance]
         ] as const).map(([currency, balance], i) => (

@@ -502,12 +502,13 @@ contract TroveManager is LiquityBase, Ownable, CheckContract, ITroveManager {
             ICollSurplusPool(address(0)),
             address(0)
         );
+
+        console.log("Liquidation start");
         IStabilityPool stabilityPoolCached = stabilityPool;
 
         LocalVariables_OuterLiquidationFunction memory vars;
 
         LiquidationTotals memory totals;
-
         vars.price = priceFeed.fetchPrice();
         vars.LUSDInStabPool = stabilityPoolCached.getTotalLUSDDeposits();
         vars.recoveryModeAtStart = _checkRecoveryMode(vars.price);
@@ -522,7 +523,9 @@ contract TroveManager is LiquityBase, Ownable, CheckContract, ITroveManager {
         require(totals.totalDebtInSequence > 0, "TroveManager: nothing to liquidate");
 
         // Move liquidated ETH and LUSD to the appropriate pools
+         console.log("Debit %s Coleteral %s",totals.totalDebtToOffset,totals.totalCollToSendToSP);
         stabilityPoolCached.offset(totals.totalDebtToOffset, totals.totalCollToSendToSP);
+        console.log("Liquidation move surplus %s",totals.totalCollSurplus);
         _redistributeDebtAndColl(contractsCache.activePool, contractsCache.defaultPool, totals.totalDebtToRedistribute, totals.totalCollToRedistribute);
         if (totals.totalCollSurplus > 0) {
             contractsCache.activePool.sendETH(address(collSurplusPool), totals.totalCollSurplus);
@@ -1233,7 +1236,9 @@ contract TroveManager is LiquityBase, Ownable, CheckContract, ITroveManager {
         // Transfer coll and debt from ActivePool to DefaultPool
         _activePool.decreaseLUSDDebt(_debt);
         _defaultPool.increaseLUSDDebt(_debt);
+        console.log("Sendig colatoral to default pool %s" , _coll );
         _activePool.sendETH(address(_defaultPool), _coll);
+        
     }
 
     function closeTrove(address _borrower) external override {

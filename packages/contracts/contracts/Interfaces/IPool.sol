@@ -23,4 +23,7 @@ interface IPool {
     function increaseLUSDDebt(uint _amount) external;
 
     function decreaseLUSDDebt(uint _amount) external;
+
+    function addWeth(uint _amount)  external;
+
 }

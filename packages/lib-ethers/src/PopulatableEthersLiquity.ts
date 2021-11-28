@@ -847,8 +847,7 @@ export class PopulatableEthersLiquity
     const txParams = (borrowLUSD: Decimal): Parameters<typeof borrowerOperations.openTrove> => [
       maxBorrowingRate.hex,
       borrowLUSD.hex,
-      ...hints,
-      { value: depositCollateral.hex, ...overrides }
+      ...hints,depositCollateral.hex
     ];
 
     let gasHeadroom: number | undefined;
@@ -980,8 +979,8 @@ export class PopulatableEthersLiquity
       (withdrawCollateral ?? Decimal.ZERO).hex,
       (borrowLUSD ?? repayLUSD ?? Decimal.ZERO).hex,
       !!borrowLUSD,
-      ...hints,
-      { value: depositCollateral?.hex, ...overrides }
+      ...hints,(depositCollateral??Decimal.ZERO).hex
+      
     ];
 
     let gasHeadroom: number | undefined;
@@ -1355,6 +1354,21 @@ export class PopulatableEthersLiquity
         { ...overrides },
         id,
         unipool.address,
+        Decimal.from(allowance ?? Decimal.INFINITY).hex
+      )
+    );
+  }
+  /** {@inheritDoc @liquity/lib-base#PopulatableLiquity.approveWethTokens} */
+  async approveWethTokens(
+    allowance?: Decimalish,
+    overrides?: EthersTransactionOverrides
+  ): Promise<PopulatedEthersLiquityTransaction<void>> {
+    const { wethToken,borrowerOperations } = _getContracts(this._readable.connection);
+    return this._wrapSimpleTransaction(
+      await wethToken.estimateAndPopulate.approve(
+        { ...overrides },
+        id,
+        borrowerOperations.address,
         Decimal.from(allowance ?? Decimal.INFINITY).hex
       )
     );

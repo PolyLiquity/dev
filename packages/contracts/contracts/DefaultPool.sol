@@ -3,11 +3,12 @@
 pragma solidity 0.6.11;
 
 import './Interfaces/IDefaultPool.sol';
+import './Interfaces/IActivePool.sol';
 import "./Dependencies/SafeMath.sol";
 import "./Dependencies/Ownable.sol";
 import "./Dependencies/CheckContract.sol";
 import "./Dependencies/console.sol";
-
+import "./Dependencies/IERC20.sol";
 /*
  * The Default Pool holds the ETH and LUSD debt (but not LUSD tokens) from liquidations that have been redistributed
  * to active troves but not yet "applied", i.e. not yet recorded on a recipient active trove's struct.
@@ -24,29 +25,37 @@ contract DefaultPool is Ownable, CheckContract, IDefaultPool {
     address public activePoolAddress;
     uint256 internal ETH;  // deposited ETH tracker
     uint256 internal LUSDDebt;  // debt
+    
+    IERC20 wethToken;
+    IActivePool public activePool;
 
     event TroveManagerAddressChanged(address _newTroveManagerAddress);
     event DefaultPoolLUSDDebtUpdated(uint _LUSDDebt);
     event DefaultPoolETHBalanceUpdated(uint _ETH);
+    event WethTokenAddressSet(address _newWethAddress);
 
     // --- Dependency setters ---
 
     function setAddresses(
         address _troveManagerAddress,
-        address _activePoolAddress
+        address _activePoolAddress,
+        address _wethTokenAddress
     )
         external
         onlyOwner
     {
         checkContract(_troveManagerAddress);
         checkContract(_activePoolAddress);
+        checkContract(_wethTokenAddress);
 
         troveManagerAddress = _troveManagerAddress;
         activePoolAddress = _activePoolAddress;
+        activePool = IActivePool(_activePoolAddress);
+        wethToken = IERC20(_wethTokenAddress);
 
         emit TroveManagerAddressChanged(_troveManagerAddress);
         emit ActivePoolAddressChanged(_activePoolAddress);
-
+        emit WethTokenAddressSet(_wethTokenAddress);
         _renounceOwnership();
     }
 
@@ -69,19 +78,27 @@ contract DefaultPool is Ownable, CheckContract, IDefaultPool {
 
     function sendETHToActivePool(uint _amount) external override {
         _requireCallerIsTroveManager();
-        address activePool = activePoolAddress; // cache to save an SLOAD
+        address _activePool = activePoolAddress; // cache to save an SLOAD
         ETH = ETH.sub(_amount);
         emit DefaultPoolETHBalanceUpdated(ETH);
-        emit EtherSent(activePool, _amount);
-
-        (bool success, ) = activePool.call{ value: _amount }("");
+        emit EtherSent(_activePool, _amount);
+        bool success = wethToken.transfer(_activePool,_amount);
+        //(bool success, ) = activePool.call{ value: _amount }("");
         require(success, "DefaultPool: sending ETH failed");
+        activePool.addWeth(_amount);
     }
 
     function increaseLUSDDebt(uint _amount) external override {
         _requireCallerIsTroveManager();
         LUSDDebt = LUSDDebt.add(_amount);
         emit DefaultPoolLUSDDebtUpdated(LUSDDebt);
+    }
+    
+    
+    function addWeth(uint _amount) external override{
+        _requireCallerIsActivePool();
+        ETH = ETH.add(_amount);
+        emit DefaultPoolETHBalanceUpdated(ETH);
     }
 
     function decreaseLUSDDebt(uint _amount) external override {
@@ -104,7 +121,7 @@ contract DefaultPool is Ownable, CheckContract, IDefaultPool {
 
     receive() external payable {
         _requireCallerIsActivePool();
-        ETH = ETH.add(msg.value);
+        //ETH = ETH.add(msg.value);
         emit DefaultPoolETHBalanceUpdated(ETH);
     }
 }

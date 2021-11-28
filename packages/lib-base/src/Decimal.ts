@@ -50,6 +50,11 @@ export class Decimal {
     return this._bigNumber.toString();
   }
 
+    /** @internal */
+    get realBigNumber():  BigNumber{
+      return this._bigNumber;
+    }
+
   private constructor(bigNumber: BigNumber) {
     if (bigNumber.isNegative()) {
       throw new Error("negatives not supported by Decimal");

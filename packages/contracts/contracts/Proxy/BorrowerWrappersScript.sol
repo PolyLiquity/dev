@@ -62,7 +62,7 @@ contract BorrowerWrappersScript is BorrowerOperationsScript, ETHTransferScript, 
         lqtyStaking = lqtyStakingCached;
     }
 
-    function claimCollateralAndOpenTrove(uint _maxFee, uint _LUSDAmount, address _upperHint, address _lowerHint) external payable {
+    function claimCollateralAndOpenTrove(uint _maxFee, uint _LUSDAmount, address _upperHint, address _lowerHint, uint _WETHAmount) external payable {
         uint balanceBefore = address(this).balance;
 
         // Claim collateral
@@ -73,10 +73,10 @@ contract BorrowerWrappersScript is BorrowerOperationsScript, ETHTransferScript, 
         // already checked in CollSurplusPool
         assert(balanceAfter > balanceBefore);
 
-        uint totalCollateral = balanceAfter.sub(balanceBefore).add(msg.value);
+        uint totalCollateral = balanceAfter.sub(balanceBefore).add(_WETHAmount);
 
         // Open trove with obtained collateral, plus collateral sent by user
-        borrowerOperations.openTrove{ value: totalCollateral }(_maxFee, _LUSDAmount, _upperHint, _lowerHint);
+        borrowerOperations.openTrove(_maxFee, _LUSDAmount, _upperHint, _lowerHint,totalCollateral);
     }
 
     function claimSPRewardsAndRecycle(uint _maxFee, address _upperHint, address _lowerHint) external {
@@ -94,7 +94,7 @@ contract BorrowerWrappersScript is BorrowerOperationsScript, ETHTransferScript, 
         if (claimedCollateral > 0) {
             _requireUserHasTrove(address(this));
             uint LUSDAmount = _getNetLUSDAmount(claimedCollateral);
-            borrowerOperations.adjustTrove{ value: claimedCollateral }(_maxFee, 0, LUSDAmount, true, _upperHint, _lowerHint);
+            borrowerOperations.adjustTrove(_maxFee, 0, LUSDAmount, true, _upperHint, _lowerHint,claimedCollateral);
             // Provide withdrawn LUSD to Stability Pool
             if (LUSDAmount > 0) {
                 stabilityPool.provideToSP(LUSDAmount, address(0));
@@ -124,7 +124,7 @@ contract BorrowerWrappersScript is BorrowerOperationsScript, ETHTransferScript, 
         if (gainedCollateral > 0) {
             _requireUserHasTrove(address(this));
             netLUSDAmount = _getNetLUSDAmount(gainedCollateral);
-            borrowerOperations.adjustTrove{ value: gainedCollateral }(_maxFee, 0, netLUSDAmount, true, _upperHint, _lowerHint);
+            borrowerOperations.adjustTrove(_maxFee, 0, netLUSDAmount, true, _upperHint, _lowerHint,gainedCollateral);
         }
 
         uint totalLUSD = gainedLUSD.add(netLUSDAmount);

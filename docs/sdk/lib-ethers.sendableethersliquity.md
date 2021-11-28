@@ -25,6 +25,7 @@ export declare class SendableEthersLiquity implements SendableLiquity<EthersTran
 |  --- | --- | --- |
 |  [adjustTrove(params, maxBorrowingRateOrOptionalParams, overrides)](./lib-ethers.sendableethersliquity.adjusttrove.md) |  | Adjust existing Trove by changing its collateral, debt, or both. |
 |  [approveUniTokens(allowance, overrides)](./lib-ethers.sendableethersliquity.approveunitokens.md) |  | Allow the liquidity mining contract to use Uniswap ETH/LUSD LP tokens for [staking](./lib-base.transactableliquity.stakeunitokens.md)<!-- -->. |
+|  [approveWethTokens(allowance, overrides)](./lib-ethers.sendableethersliquity.approvewethtokens.md) |  | Allow the liquidity mining contract to use WETH tokens for [staking](./lib-base.transactableliquity.stakeunitokens.md)<!-- -->. |
 |  [borrowLUSD(amount, maxBorrowingRate, overrides)](./lib-ethers.sendableethersliquity.borrowlusd.md) |  | Adjust existing Trove by borrowing more LUSD. |
 |  [claimCollateralSurplus(overrides)](./lib-ethers.sendableethersliquity.claimcollateralsurplus.md) |  | Claim leftover collateral after a liquidation or redemption. |
 |  [closeTrove(overrides)](./lib-ethers.sendableethersliquity.closetrove.md) |  | Close existing Trove by repaying all debt and withdrawing all collateral. |

@@ -100,6 +100,8 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     // (undocumented)
     approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
     // (undocumented)
+    approveWethTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<void>;
+    // (undocumented)
     borrowLUSD(amount: Decimalish, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<TroveAdjustmentDetails>;
     // (undocumented)
     claimCollateralSurplus(overrides?: EthersTransactionOverrides): Promise<void>;
@@ -183,6 +185,10 @@ export class EthersLiquity implements ReadableEthersLiquity, TransactableLiquity
     getUniTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     // (undocumented)
     getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
+    // (undocumented)
+    getWETHBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
+    // (undocumented)
+    getWethTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     hasStore(): this is EthersLiquityWithStore;
     hasStore(store: "blockPolled"): this is EthersLiquityWithStore<BlockPolledLiquityStore>;
     // (undocumented)
@@ -334,6 +340,8 @@ export class PopulatableEthersLiquity implements PopulatableLiquity<EthersTransa
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRateOrOptionalParams?: Decimalish | BorrowingOperationOptionalParams, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
     // (undocumented)
     approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
+    // (undocumented)
+    approveWethTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<void>>;
     // (undocumented)
     borrowLUSD(amount: Decimalish, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<PopulatedEthersLiquityTransaction<TroveAdjustmentDetails>>;
     // (undocumented)
@@ -518,6 +526,10 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     getUniTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     // (undocumented)
     getUniTokenBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
+    // (undocumented)
+    getWETHBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
+    // (undocumented)
+    getWethTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal>;
     hasStore(): this is ReadableEthersLiquityWithStore;
     hasStore(store: "blockPolled"): this is ReadableEthersLiquityWithStore<BlockPolledLiquityStore>;
 }
@@ -537,6 +549,8 @@ export class SendableEthersLiquity implements SendableLiquity<EthersTransactionR
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRateOrOptionalParams?: Decimalish | BorrowingOperationOptionalParams, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveAdjustmentDetails>>;
     // (undocumented)
     approveUniTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
+    // (undocumented)
+    approveWethTokens(allowance?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<void>>;
     // (undocumented)
     borrowLUSD(amount: Decimalish, maxBorrowingRate?: Decimalish, overrides?: EthersTransactionOverrides): Promise<SentEthersLiquityTransaction<TroveAdjustmentDetails>>;
     // (undocumented)

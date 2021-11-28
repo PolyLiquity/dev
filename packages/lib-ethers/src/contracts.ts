@@ -32,6 +32,7 @@ import gasPoolAbi from "../abi/GasPool.json";
 import unipoolAbi from "../abi/Unipool.json";
 import iERC20Abi from "../abi/IERC20.json";
 import erc20MockAbi from "../abi/ERC20Mock.json";
+import wethTokenAbi from "../supportabi/WETHToken.json";
 
 import {
   ActivePool,
@@ -220,7 +221,8 @@ const getAbi = (priceFeedIsTestnet: boolean, uniTokenIsMock: boolean): LiquityCo
   gasPool: gasPoolAbi,
   collSurplusPool: collSurplusPoolAbi,
   unipool: unipoolAbi,
-  uniToken: uniTokenIsMock ? erc20MockAbi : iERC20Abi
+  uniToken: uniTokenIsMock ? erc20MockAbi : iERC20Abi,
+  wethToken:wethTokenAbi
 });
 
 const mapLiquityContracts = <T, U>(

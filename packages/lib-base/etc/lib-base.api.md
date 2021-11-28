@@ -4,6 +4,8 @@
 
 ```ts
 
+import { BigNumber } from '@ethersproject/bignumber';
+
 // @internal (undocumented)
 export class _CachedReadableLiquity<T extends unknown[]> implements _ReadableLiquityWithExtraParams<T> {
     constructor(readable: _ReadableLiquityWithExtraParams<T>, cache: _LiquityReadCache<T>);
@@ -57,6 +59,10 @@ export class _CachedReadableLiquity<T extends unknown[]> implements _ReadableLiq
     getUniTokenAllowance(address?: string, ...extraParams: T): Promise<Decimal>;
     // (undocumented)
     getUniTokenBalance(address?: string, ...extraParams: T): Promise<Decimal>;
+    // (undocumented)
+    getWETHBalance(address?: string, ...extraParams: T): Promise<Decimal>;
+    // (undocumented)
+    getWethTokenAllowance(address?: string, ...extraParams: T): Promise<Decimal>;
     }
 
 // @internal (undocumented)
@@ -137,6 +143,8 @@ export class Decimal {
     pow(exponent: number): Decimal;
     // (undocumented)
     prettify(precision?: number): string;
+    // @internal (undocumented)
+    get realBigNumber(): BigNumber;
     // (undocumented)
     shorten(): string;
     // (undocumented)
@@ -284,6 +292,8 @@ export interface LiquityStoreBaseState {
     troveBeforeRedistribution: TroveWithPendingRedistribution;
     uniTokenAllowance: Decimal;
     uniTokenBalance: Decimal;
+    wethBalance: Decimal;
+    wethTokenAllowance: Decimal;
 }
 
 // @public
@@ -446,6 +456,7 @@ export type _PopulatableFrom<T, P> = {
 export interface PopulatableLiquity<R = unknown, S = unknown, P = unknown> extends _PopulatableFrom<SendableLiquity<R, S>, P> {
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRate?: Decimalish): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, TroveAdjustmentDetails>>>>;
     approveUniTokens(allowance?: Decimalish): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, void>>>>;
+    approveWethTokens(allowance?: Decimalish): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, void>>>>;
     borrowLUSD(amount: Decimalish, maxBorrowingRate?: Decimalish): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, TroveAdjustmentDetails>>>>;
     claimCollateralSurplus(): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, void>>>>;
     closeTrove(): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, TroveClosureDetails>>>>;
@@ -517,6 +528,8 @@ export interface ReadableLiquity {
     getTroves(params: TroveListingParams): Promise<UserTrove[]>;
     getUniTokenAllowance(address?: string): Promise<Decimal>;
     getUniTokenBalance(address?: string): Promise<Decimal>;
+    getWETHBalance(address?: string): Promise<Decimal>;
+    getWethTokenAllowance(address?: string): Promise<Decimal>;
 }
 
 // @internal (undocumented)
@@ -553,6 +566,7 @@ export type _SendableFrom<T, R, S> = {
 export interface SendableLiquity<R = unknown, S = unknown> extends _SendableFrom<TransactableLiquity, R, S> {
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRate?: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<R, TroveAdjustmentDetails>>>;
     approveUniTokens(allowance?: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<R, void>>>;
+    approveWethTokens(allowance?: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<R, void>>>;
     borrowLUSD(amount: Decimalish, maxBorrowingRate?: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<R, TroveAdjustmentDetails>>>;
     claimCollateralSurplus(): Promise<SentLiquityTransaction<S, LiquityReceipt<R, void>>>;
     closeTrove(): Promise<SentLiquityTransaction<S, LiquityReceipt<R, TroveClosureDetails>>>;
@@ -643,6 +657,7 @@ export const _successfulReceipt: <R, D>(rawReceipt: R, details: D, toString?: ((
 export interface TransactableLiquity {
     adjustTrove(params: TroveAdjustmentParams<Decimalish>, maxBorrowingRate?: Decimalish): Promise<TroveAdjustmentDetails>;
     approveUniTokens(allowance?: Decimalish): Promise<void>;
+    approveWethTokens(allowance?: Decimalish): Promise<void>;
     borrowLUSD(amount: Decimalish, maxBorrowingRate?: Decimalish): Promise<TroveAdjustmentDetails>;
     claimCollateralSurplus(): Promise<void>;
     closeTrove(): Promise<TroveClosureDetails>;

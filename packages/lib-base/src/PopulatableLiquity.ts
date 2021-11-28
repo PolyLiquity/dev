@@ -278,6 +278,12 @@ export interface PopulatableLiquity<R = unknown, S = unknown, P = unknown>
     allowance?: Decimalish
   ): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, void>>>>;
 
+    /** {@inheritDoc TransactableLiquity.approveWethTokens} */
+    approveWethTokens(
+      allowance?: Decimalish
+    ): Promise<PopulatedLiquityTransaction<P, SentLiquityTransaction<S, LiquityReceipt<R, void>>>>;
+  
+
   /** {@inheritDoc TransactableLiquity.stakeUniTokens} */
   stakeUniTokens(
     amount: Decimalish

@@ -15,7 +15,7 @@ import {
   UserTroveStatus
 } from "@liquity/lib-base";
 
-import { MultiTroveGetter } from "../types";
+
 
 import { decimalify, numberify, panic } from "./_utils";
 import { EthersCallOverrides, EthersProvider, EthersSigner } from "./types";
@@ -32,6 +32,8 @@ import {
 } from "./EthersLiquityConnection";
 
 import { BlockPolledLiquityStore } from "./BlockPolledLiquityStore";
+
+import { MultiTroveGetter } from "../types";
 
 // TODO: these are constant in the contracts, so it doesn't make sense to make a call for them,
 // but to avoid having to update them here when we change them in the contracts, we could read
@@ -302,7 +304,7 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     return lusdToken.balanceOf(address, { ...overrides }).then(decimalify);
   }
 
-  /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLUSDBalance} */
+  /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getWETHBalance} */
   getWETHBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
     address ??= _requireAddress(this.connection);
     const { wethToken } = _getContracts(this.connection);
@@ -310,7 +312,13 @@ export class ReadableEthersLiquity implements ReadableLiquity {
     return wethToken.balanceOf(address, { ...overrides }).then(decimalify);
   }
 
-
+    /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getWethTokenAllowance} */
+    getWethTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
+      address ??= _requireAddress(this.connection);
+      const {wethToken,borrowerOperations} = _getContracts(this.connection);
+  
+      return wethToken.allowance(address, borrowerOperations.address, { ...overrides }).then(decimalify);
+    }
 
   /** {@inheritDoc @liquity/lib-base#ReadableLiquity.getLQTYBalance} */
   getLQTYBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
@@ -558,6 +566,17 @@ class _BlockPolledReadableEthersLiquity
     this.store = store;
     this.connection = readable.connection;
     this._readable = readable;
+  }
+  async getWethTokenAllowance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
+
+    return this._userHit(address, overrides)
+    ? this.store.state.wethTokenAllowance
+    : this._readable.getWethTokenAllowance(address, overrides);
+  }
+  async getWETHBalance(address?: string, overrides?: EthersCallOverrides): Promise<Decimal> {
+    return this._userHit(address, overrides)
+    ? this.store.state.lqtyBalance
+    : this._readable.getWETHBalance(address, overrides);
   }
 
   private _blockHit(overrides?: EthersCallOverrides): boolean {

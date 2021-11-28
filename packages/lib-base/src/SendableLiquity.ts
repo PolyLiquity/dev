@@ -249,6 +249,12 @@ export interface SendableLiquity<R = unknown, S = unknown>
     allowance?: Decimalish
   ): Promise<SentLiquityTransaction<S, LiquityReceipt<R, void>>>;
 
+   /** {@inheritDoc TransactableLiquity.approveWethTokens} */
+   approveWethTokens(
+    allowance?: Decimalish
+  ): Promise<SentLiquityTransaction<S, LiquityReceipt<R, void>>>;
+
+
   /** {@inheritDoc TransactableLiquity.stakeUniTokens} */
   stakeUniTokens(amount: Decimalish): Promise<SentLiquityTransaction<S, LiquityReceipt<R, void>>>;
 

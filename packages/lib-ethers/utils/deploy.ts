@@ -24,7 +24,7 @@ export const log = (...args: unknown[]): void => {
 export const setSilent = (s: boolean): void => {
   silent = s;
 };
-
+const hasFactory = (chainId: number) => [1, 3, 4, 5, 42].includes(chainId);
 const deployContractAndGetBlockNumber = async (
   deployer: Signer,
   getContractFactory: (name: string, signer: Signer) => Promise<ContractFactory>,
@@ -56,6 +56,7 @@ const deployContracts = async (
   deployer: Signer,
   getContractFactory: (name: string, signer: Signer) => Promise<ContractFactory>,
   priceFeedIsTestnet = true,
+  wethAddress: string,
   overrides?: Overrides
 ): Promise<[addresses: Omit<_LiquityContractAddresses, "uniToken">, startBlock: number]> => {
   const [activePoolAddress, startBlock] = await deployContractAndGetBlockNumber(
@@ -67,6 +68,7 @@ const deployContracts = async (
 
   const addresses = {
     activePool: activePoolAddress,
+    
     borrowerOperations: await deployContract(deployer, getContractFactory, "BorrowerOperations", {
       ...overrides
     }),
@@ -109,6 +111,7 @@ const deployContracts = async (
   return [
     {
       ...addresses,
+      wethToken: wethAddress,
       lusdToken: await deployContract(
         deployer,
         getContractFactory,
@@ -174,6 +177,7 @@ const connectContracts = async (
     unipool,
     uniToken
   }: _LiquityContracts,
+  wethAddress: string,
   deployer: Signer,
   overrides?: Overrides
 ) => {
@@ -218,6 +222,7 @@ const connectContracts = async (
         sortedTroves.address,
         lusdToken.address,
         lqtyStaking.address,
+        wethAddress,
         { ...overrides, nonce }
       ),
 
@@ -230,6 +235,7 @@ const connectContracts = async (
         sortedTroves.address,
         priceFeed.address,
         communityIssuance.address,
+        wethAddress,
         { ...overrides, nonce }
       ),
 
@@ -239,11 +245,13 @@ const connectContracts = async (
         troveManager.address,
         stabilityPool.address,
         defaultPool.address,
+        wethAddress,
+        collSurplusPool.address,
         { ...overrides, nonce }
       ),
 
     nonce =>
-      defaultPool.setAddresses(troveManager.address, activePool.address, {
+      defaultPool.setAddresses(troveManager.address, activePool.address,wethAddress, {
         ...overrides,
         nonce
       }),
@@ -253,6 +261,7 @@ const connectContracts = async (
         borrowerOperations.address,
         troveManager.address,
         activePool.address,
+        wethAddress,
         { ...overrides, nonce }
       ),
 
@@ -269,6 +278,7 @@ const connectContracts = async (
         troveManager.address,
         borrowerOperations.address,
         activePool.address,
+        wethAddress,
         { ...overrides, nonce }
       ),
 
@@ -312,13 +322,25 @@ const deployMockUniToken = (
     0, // initialBalance
     { ...overrides }
   );
+  const deployWETHToken = (
+    deployer: Signer,
+    getContractFactory: (name: string, signer: Signer) => Promise<ContractFactory>,
+    overrides?: Overrides
+  ) =>
+    deployContract(
+      deployer,
+      getContractFactory,
+      "WethToken",
+      10000000, // initialBalance
+      { ...overrides }
+    );
 
 export const deployAndSetupContracts = async (
   deployer: Signer,
   getContractFactory: (name: string, signer: Signer) => Promise<ContractFactory>,
   _priceFeedIsTestnet = true,
   _isDev = true,
-  wethAddress?: string,
+  wethAddress: string,
   overrides?: Overrides
 ): Promise<_LiquityDeploymentJSON> => {
   if (!deployer.provider) {
@@ -326,6 +348,13 @@ export const deployAndSetupContracts = async (
   }
 
   log("Deploying contracts...");
+  //log("WETH "+ wethAddress);
+  log();
+
+  if(_isDev)
+    wethAddress = await deployWETHToken(deployer, getContractFactory, overrides);
+  
+  log("WETH "+ wethAddress);
   log();
 
   const deployment: _LiquityDeploymentJSON = {
@@ -336,17 +365,17 @@ export const deployAndSetupContracts = async (
     totalStabilityPoolLQTYReward: "0",
     liquidityMiningLQTYRewardRate: "0",
     _priceFeedIsTestnet,
-    _uniTokenIsMock: !wethAddress,
+    _uniTokenIsMock: !wethAddress || _isDev,
     _isDev,
 
-    ...(await deployContracts(deployer, getContractFactory, _priceFeedIsTestnet, overrides).then(
+    ...(await deployContracts(deployer, getContractFactory, _priceFeedIsTestnet,wethAddress, overrides).then(
       async ([addresses, startBlock]) => ({
         startBlock,
 
         addresses: {
           ...addresses,
-
-          uniToken: await (wethAddress
+          //wethToken:wethAddress,
+          uniToken: await (hasFactory(await deployer.getChainId())
             ? createUniswapV2Pair(deployer, wethAddress, addresses.lusdToken, overrides)
             : deployMockUniToken(deployer, getContractFactory, overrides))
         }
@@ -357,7 +386,7 @@ export const deployAndSetupContracts = async (
   const contracts = _connectToContracts(deployer, deployment);
 
   log("Connecting contracts...");
-  await connectContracts(contracts, deployer, overrides);
+  await connectContracts(contracts,wethAddress, deployer, overrides);
 
   const lqtyTokenDeploymentTime = await contracts.lqtyToken.getDeploymentStartTime();
   const bootstrapPeriod = await contracts.troveManager.BOOTSTRAP_PERIOD();

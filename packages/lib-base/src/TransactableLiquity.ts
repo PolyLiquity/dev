@@ -457,6 +457,21 @@ export interface TransactableLiquity {
    * Throws {@link TransactionFailedError} in case of transaction failure.
    */
   withdrawGainsFromStaking(): Promise<void>;
+  /**
+   * Allow the liquidity mining contract to use WETH tokens for
+   * {@link @liquity/lib-base#TransactableLiquity.stakeUniTokens | staking}.
+   *
+   * @param allowance - Maximum amount of LP tokens that will be transferrable to liquidity mining
+   *                    (`2^256 - 1` by default).
+   *
+   * @remarks
+   * Must be performed before calling
+   * {@link @liquity/lib-base#TransactableLiquity.openTrove}.
+   *
+   * @throws
+   * Throws {@link TransactionFailedError} in case of transaction failure.
+   */
+   approveWethTokens(allowance?: Decimalish): Promise<void>;
 
   /**
    * Allow the liquidity mining contract to use Uniswap ETH/LUSD LP tokens for

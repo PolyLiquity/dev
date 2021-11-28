@@ -31,6 +31,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  --- | --- | --- |
 |  [adjustTrove(params, maxBorrowingRateOrOptionalParams, overrides)](./lib-ethers.ethersliquity.adjusttrove.md) |  | Adjust existing Trove by changing its collateral, debt, or both. |
 |  [approveUniTokens(allowance, overrides)](./lib-ethers.ethersliquity.approveunitokens.md) |  | Allow the liquidity mining contract to use Uniswap ETH/LUSD LP tokens for [staking](./lib-base.transactableliquity.stakeunitokens.md)<!-- -->. |
+|  [approveWethTokens(allowance, overrides)](./lib-ethers.ethersliquity.approvewethtokens.md) |  | Allow the liquidity mining contract to use WETH tokens for [staking](./lib-base.transactableliquity.stakeunitokens.md)<!-- -->. |
 |  [borrowLUSD(amount, maxBorrowingRate, overrides)](./lib-ethers.ethersliquity.borrowlusd.md) |  | Adjust existing Trove by borrowing more LUSD. |
 |  [claimCollateralSurplus(overrides)](./lib-ethers.ethersliquity.claimcollateralsurplus.md) |  | Claim leftover collateral after a liquidation or redemption. |
 |  [closeTrove(overrides)](./lib-ethers.ethersliquity.closetrove.md) |  | Close existing Trove by repaying all debt and withdrawing all collateral. |
@@ -61,6 +62,8 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [getTroves(params, overrides)](./lib-ethers.ethersliquity.gettroves_1.md) |  | Get a slice from the list of Troves. |
 |  [getUniTokenAllowance(address, overrides)](./lib-ethers.ethersliquity.getunitokenallowance.md) |  | Get the liquidity mining contract's allowance of a holder's Uniswap ETH/LUSD LP tokens. |
 |  [getUniTokenBalance(address, overrides)](./lib-ethers.ethersliquity.getunitokenbalance.md) |  | Get the amount of Uniswap ETH/LUSD LP tokens held by an address. |
+|  [getWETHBalance(address, overrides)](./lib-ethers.ethersliquity.getwethbalance.md) |  | Get the amount of WETH held by an address. |
+|  [getWethTokenAllowance(address, overrides)](./lib-ethers.ethersliquity.getwethtokenallowance.md) |  | Get the liquidity WETH allowance. |
 |  [hasStore()](./lib-ethers.ethersliquity.hasstore.md) |  | Check whether this <code>EthersLiquity</code> is an [EthersLiquityWithStore](./lib-ethers.ethersliquitywithstore.md)<!-- -->. |
 |  [hasStore(store)](./lib-ethers.ethersliquity.hasstore_1.md) |  | Check whether this <code>EthersLiquity</code> is an [EthersLiquityWithStore](./lib-ethers.ethersliquitywithstore.md)<!-- -->&lt;[BlockPolledLiquityStore](./lib-ethers.blockpolledliquitystore.md)<!-- -->&gt;<!-- -->. |
 |  [liquidate(address, overrides)](./lib-ethers.ethersliquity.liquidate.md) |  | Liquidate one or more undercollateralized Troves. |

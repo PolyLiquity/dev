@@ -43,4 +43,6 @@ Implemented by [EthersLiquity](./lib-ethers.ethersliquity.md)<!-- -->.
 |  [getTroves(params)](./lib-base.readableliquity.gettroves_1.md) | Get a slice from the list of Troves. |
 |  [getUniTokenAllowance(address)](./lib-base.readableliquity.getunitokenallowance.md) | Get the liquidity mining contract's allowance of a holder's Uniswap ETH/LUSD LP tokens. |
 |  [getUniTokenBalance(address)](./lib-base.readableliquity.getunitokenbalance.md) | Get the amount of Uniswap ETH/LUSD LP tokens held by an address. |
+|  [getWETHBalance(address)](./lib-base.readableliquity.getwethbalance.md) | Get the amount of WETH held by an address. |
+|  [getWethTokenAllowance(address)](./lib-base.readableliquity.getwethtokenallowance.md) | Get the liquidity WETH allowance. |
 
